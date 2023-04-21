@@ -1,0 +1,96 @@
+﻿<Page x:Class="LearnSchool.Pages.ServicesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LearnSchool.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="1050"
+      WindowTitle="Услуги" Background="White" Loaded="ServicesPageLoaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="12*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom">
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Поиск:"></TextBlock>
+                <TextBox Margin="10 0 0 0" x:Name="tbSearchName" Width="200" TextChanged="TbSearchNameTextChanged"></TextBox>
+                <Button x:Name="adminModeBtn" Margin="30 0 0 0" Content="Войти в админ режим" Click="AdminModeBtnClick"/>
+                <Button x:Name="btnLeave" Click="btnLeave_Click">Выйти</Button>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Сортировка"></TextBlock>
+                <ComboBox Margin="10 0 0 0" x:Name="cbSortPrice" SelectionChanged="CbSortPriceSelectionChanged" SelectedIndex="0">
+                    <ComboBoxItem Content="Нет сортировки"></ComboBoxItem>
+                    <ComboBoxItem Content="По убыванию"></ComboBoxItem>
+                    <ComboBoxItem Content="По возрастанию"></ComboBoxItem>
+                </ComboBox>
+
+                <TextBlock Margin="10 0 0 0" Text="Фильтрация по скидке"></TextBlock>
+                <ComboBox Margin="10 0 0 0" x:Name="cbFilterDiscount" SelectedIndex="0" SelectionChanged="CbFilterDiscountSelectionChanged">
+                    <ComboBoxItem Content="Без фильтрации по скидке"></ComboBoxItem>
+                    <ComboBoxItem Content="от 0 до 10%"></ComboBoxItem>
+                    <ComboBoxItem Content="от 10 до 20%"></ComboBoxItem>
+                    <ComboBoxItem Content="от 20 до 40%"></ComboBoxItem>
+                    <ComboBoxItem Content="от 40 до 70%"></ComboBoxItem>
+                    <ComboBoxItem Content="от 70 до 100%"></ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+        </StackPanel>
+
+        <ListView x:Name="lvServices" Grid.Column="1" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" HorizontalContentAlignment="Stretch" SelectionChanged="LvServicesSelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Background="{Binding Path=ServiceBackgroundColor}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="{Binding Path=PhotoBytes}" Width="150" Height="150" Margin="0 0 10 8"/>
+                        <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Top">
+                            <TextBlock Text="{Binding Path=Title}"></TextBlock>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Margin="0 0 5 0" TextDecorations="Strikethrough" Text="{Binding Path=Cost, StringFormat={}{0:F0}}" Visibility="{Binding Path=IsHaveDiscount}" VerticalAlignment="Center"></TextBlock>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0:F0} рублей за {1}">
+                                                <Binding Path="CostWithDiscount" />
+                                                <Binding Path="DurationInMinutes" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <TextBlock Text="{Binding Path=DiscountDisplay}"></TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Bottom" Margin="0 0 0 8">
+                            <Button x:Name="btnEditService" Visibility="{Binding AdminVisibility}" Tag="{Binding ID}" Content="Редактировать" Margin="0 0 5 0" Click="BtnEditServiceClick"/>
+                            <Button x:Name="btnDeleteService" Visibility="{Binding AdminVisibility}" Tag="{Binding ID}" Content="Удалить" Margin="5 0 0 0" Click="BtnDeleteServiceClick"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <StackPanel Grid.Column="1" Grid.Row="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="btnAddNewService" Content="Добавить новую услугу" Click="BtnAddNewServiceClick"/>
+                <Button x:Name="btnShowClientRecords" Content="Просмотреть записи" Click="BtnShowClientRecordsClick"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
